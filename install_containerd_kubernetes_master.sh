@@ -61,16 +61,12 @@ apt-mark hold kubelet kubeadm kubectl
 systemctl restart kubelet
 systemctl enable kubelet
 
-#Novo
 # Inicializa o cluster Kubernetes
 kubeadm init --pod-network-cidr="192.168.0.0/16" --control-plane-endpoint=$(hostname) --upload-certs && \
 echo "kubeadm init completed successfully. Sleeping for 90 seconds..." && \
 sleep 90
 
 # Configura kubectl para o usuário atual
-#mkdir -p $HOME/.kube
-#cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#chown $(id -u):$(id -g) $HOME/.kube/config
 mkdir -p /root/.kube
 cp -i /etc/kubernetes/admin.conf /root/.kube/config
 chown $(id -u):$(id -g) /root/.kube/config  && \
