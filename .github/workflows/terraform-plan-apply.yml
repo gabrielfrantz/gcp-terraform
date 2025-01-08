@@ -1,0 +1,86 @@
+name: Terraform Plan-Apply
+#on: 
+  #push: #quando ele vai rodar
+    #branches:
+      #- main #branch que ele vai rodar
+  #workflow_dispatch: #permite executar manualmente
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform_plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest #vai rodar numa máquina ubuntu própria do github
+
+    defaults:
+      run:
+        shell: bash #tipo de shell que vai correr o workflow na máquina
+
+    steps:
+    - name: Checkout #precisa dele em todos os steps (é padrão)
+      uses: actions/checkout@v3 #padrão do github
+
+    # Instalar o Terraform
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false # Define como falso para usar o binário do Terraform diretamente
+
+    # Configurar o Google Cloud CLI
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} # Precisa adicionar a chave json da service account em uma secret no repositório
+
+    # Configurar o projeto da GCP
+    - name: Set GCP Project
+      run: gcloud config set project ${{ secrets.PROJECT_ID }} # Precisa adicionar o código do projeto da GCP em uma secret no repositório
+    
+    # Inicializar o Terraform
+    - name: Terraform Init
+      run: terraform init
+
+    # Validar o código Terraform
+    - name: Terraform Validate
+      run: terraform validate
+
+    # Fazer o plan
+    - name: Terraform Plan
+      run: terraform plan
+
+  terraform_apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest #vai rodar numa máquina ubuntu próprio do github
+    needs: terraform_plan #deixa o job terraform_apply dependente do job terraform_plan
+    defaults:
+      run:
+        shell: bash #tipo de shell que vai correr o workflow na máquina
+
+    steps:
+    - name: Checkout #precisa dele em todos os steps (é padrão)
+      uses: actions/checkout@v3 #padrão do github
+
+    # Instalar o Terraform
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false # Define como falso para usar o binário do Terraform diretamente
+
+    # Configurar o Google Cloud CLI
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} # Precisa adicionar a chave json da service account em uma secret no repositório
+
+    # Configurar o projeto da GCP
+    - name: Set GCP Project
+      run: gcloud config set project ${{ secrets.PROJECT_ID }} # Precisa adicionar o código do projeto da GCP em uma secret no repositório
+
+    # Inicializar o Terraform
+    - name: Terraform Init (Remote Backend)
+      run: terraform init
+
+    # Fazer o apply
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
