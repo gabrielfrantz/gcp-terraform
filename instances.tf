@@ -26,6 +26,7 @@ resource "google_compute_instance" "instance_k8s_master_01" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
+      size  = 100 # Tamanho do disco em GB
     }
   }
 
@@ -48,6 +49,7 @@ resource "google_compute_instance" "instance_k8s_node_01" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
+      size  = 100 # Tamanho do disco em GB
     }
   }
 
@@ -70,6 +72,7 @@ resource "google_compute_instance" "instance_k8s_node_02" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
+      size  = 100 # Tamanho do disco em GB
     }
   }
   network_interface {
@@ -91,6 +94,7 @@ resource "google_compute_instance" "instance_k8s_rancher_01" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
+      size  = 100 # Tamanho do disco em GB
     }
   }
   network_interface {
