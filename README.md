@@ -21,7 +21,7 @@ Este repositório contém uma pipeline configurada no GitHub Actions que utiliza
 
 ### Criando um Bucket Manualmente na GCP (Privado)
 1. Crie um bucket privado na GCP.
-2. Adicione a Service Account usada neste projeto como usuária do bucket com permissões adequadas.
+2. Adicione a Service Account usada neste projeto como usuário do bucket com permissões adequadas.
 3. Atualize o arquivo `main.tf`, configurando o nome do bucket no bloco `backend "gcs"` para armazenar o estado remoto do Terraform.
 
 ![image](https://github.com/user-attachments/assets/6984d1e4-4fd7-4ac3-a6ec-1dc77e1ee9b7)
